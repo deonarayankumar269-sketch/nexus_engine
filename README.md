@@ -29,3 +29,8 @@ npm start
 cd ../nexus-engine-frontend/vite-project
 npm install
 npm run dev
+
+
+### 🚀 Live Demo
+Check out the live application here: [Nexus Engine Live](https://nexus-engine-1.onrender.com)
+
