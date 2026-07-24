@@ -15,7 +15,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/nexusengine');
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/nexusengine');
 
 app.get('/api/snippets/:title', async (req, res) => {
     try {
