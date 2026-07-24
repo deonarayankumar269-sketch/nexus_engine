@@ -329,21 +329,21 @@ return executeNeuralSynthesis(8000000);`);
             <canvas ref={particleCanvasRef} className="absolute inset-0 pointer-events-none z-0"></canvas>
 
             {/* Glowing Holographic Orbs */}
-            <div className="absolute top-0 left-1/4 w-125 h-125 bg-cyan-600/25 rounded-full blur-[180px] pointer-events-none z-0 animate-pulse"></div>
-            <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-pink-600/25 rounded-full blur-[180px] pointer-events-none z-0 animate-pulse"></div>
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-600/25 rounded-full blur-[180px] pointer-events-none z-0 animate-pulse"></div>
+            <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-pink-600/25 rounded-full blur-[180px] pointer-events-none z-0 animate-pulse"></div>
 
             {/* Cinematic Cyberpunk Scanlines */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.3)_50%)] bg-size-[100%_4px] pointer-events-none z-40 opacity-30"></div>
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.3)_50%)] bg-[length:100%_4px] pointer-events-none z-40 opacity-30"></div>
 
             {/* Glassmorphic Top HUD with Real-time Telemetry Badges */}
             <header className="bg-[#050b14]/90 backdrop-blur-3xl sticky top-0 z-50 border-b border-cyan-500/40 px-6 py-4 flex items-center justify-between shadow-[0_0_60px_rgba(0,242,254,0.3)]">
                 <div className="flex items-center space-x-6">
                     <div className="flex items-center space-x-4">
-                        <div className="w-13 h-13 rounded-2xl bg-linear-to-tr from-cyan-500 via-indigo-600 to-pink-500 flex items-center justify-center shadow-[0_0_40px_rgba(255,0,127,0.8)] animate-pulse">
+                        <div className="w-[52px] h-[52px] rounded-2xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-pink-500 flex items-center justify-center shadow-[0_0_40px_rgba(255,0,127,0.8)] animate-pulse">
                             <i className="fa-solid fa-atom text-[#020408] text-2xl font-black"></i>
                         </div>
                         <div>
-                            <h1 className="font-black tracking-[0.3em] text-base bg-linear-to-r from-cyan-300 via-teal-100 to-pink-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(0,242,254,0.6)]">NEXUS_ENGINE // GOD-TIER OS</h1>
+                            <h1 className="font-black tracking-[0.3em] text-base bg-gradient-to-r from-cyan-300 via-teal-100 to-pink-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(0,242,254,0.6)]">NEXUS_ENGINE // GOD-TIER OS</h1>
                             <p className="text-[11px] text-pink-400 tracking-widest font-black">ARCHITECT: DEONARAYAN</p>
                         </div>
                     </div>
@@ -370,7 +370,7 @@ return executeNeuralSynthesis(8000000);`);
                         <i className="fa-solid fa-code-branch text-pink-400 group-hover:rotate-90 transition-transform duration-500"></i>
                         <span className="tracking-wider">BRANCHES</span>
                     </button>
-                    <button onClick={executeCode} className="px-7 py-3 text-xs font-black bg-linear-to-r from-cyan-500 via-indigo-600 to-pink-500 hover:from-cyan-400 hover:to-pink-400 text-[#020408] rounded-2xl transition shadow-[0_0_45px_rgba(255,0,127,0.8)] flex items-center space-x-3 transform hover:scale-105 active:scale-95">
+                    <button onClick={executeCode} className="px-7 py-3 text-xs font-black bg-gradient-to-r from-cyan-500 via-indigo-600 to-pink-500 hover:from-cyan-400 hover:to-pink-400 text-[#020408] rounded-2xl transition shadow-[0_0_45px_rgba(255,0,127,0.8)] flex items-center space-x-3 transform hover:scale-105 active:scale-95">
                         <i className="fa-solid fa-bolt-lightning text-sm text-[#020408]"></i>
                         <span className="tracking-widest">INITIALIZE QUANTUM COMPILE</span>
                     </button>
@@ -379,19 +379,19 @@ return executeNeuralSynthesis(8000000);`);
 
             {/* Futuristic Tab Bar */}
             <div className="bg-[#050b14]/75 backdrop-blur-md px-6 py-2.5 border-b border-cyan-500/30 flex items-center space-x-4 z-10 text-xs">
-                <button onClick={() => setActiveTab('editor')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'editor' ? 'bg-linear-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
+                <button onClick={() => setActiveTab('editor')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'editor' ? 'bg-gradient-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
                     <i className="fa-solid fa-code text-cyan-400 text-sm"></i>
                     <span>Quantum Code Editor</span>
                 </button>
-                <button onClick={() => setActiveTab('cli')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'cli' ? 'bg-linear-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
+                <button onClick={() => setActiveTab('cli')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'cli' ? 'bg-gradient-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
                     <i className="fa-solid fa-terminal text-pink-400 text-sm"></i>
                     <span>Neural Shell CLI</span>
                 </button>
-                <button onClick={() => setActiveTab('radar')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'radar' ? 'bg-linear-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
+                <button onClick={() => setActiveTab('radar')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'radar' ? 'bg-gradient-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
                     <i className="fa-solid fa-satellite-dish text-cyan-400 text-sm"></i>
                     <span>Global Peer Radar</span>
                 </button>
-                <button onClick={() => setActiveTab('matrix')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'matrix' ? 'bg-linear-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
+                <button onClick={() => setActiveTab('matrix')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'matrix' ? 'bg-gradient-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
                     <i className="fa-solid fa-microchip text-pink-400 text-sm"></i>
                     <span>Neural Matrix Stream</span>
                 </button>
@@ -400,7 +400,7 @@ return executeNeuralSynthesis(8000000);`);
             {/* Immersive Bento Grid Workspace Layout */}
             <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 p-5 max-w-[1920px] w-full mx-auto z-10">
                 <section className="lg:col-span-8 flex flex-col bg-[#050b14]/90 backdrop-blur-3xl rounded-3xl overflow-hidden border border-cyan-500/40 shadow-[0_0_70px_rgba(0,0,0,0.95)] relative group">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-pink-500 to-transparent animate-pulse"></div>
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent animate-pulse"></div>
 
                     {activeTab === 'editor' && (
                         <>
