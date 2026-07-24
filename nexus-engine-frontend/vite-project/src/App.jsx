@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
-const SOCKET_SERVER_URL = 'http://localhost:5000';
-const socket = io(SOCKET_SERVER_URL);
+const BACKEND_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000' 
+    : 'https://nexus-engine-backend.onrender.com';
 
 export default function App() {
     const [activeTab, setActiveTab] = useState('editor');
@@ -36,20 +37,36 @@ return executeNeuralSynthesis(8000000);`);
         'NexusEngine Neural OS [Version 15.0.2-GODMODE]',
         'Type "help", "matrix-override", or click "INITIALIZE QUANTUM COMPILE" to trigger.'
     ]);
-    const [cpuLoad, setCpuLoad] = useState(14.2);
-    const [quantumFlux, setQuantumFlux] = useState(99.8);
+    const [cpuLoad, setCpuLoad] = useState('14.2');
+    const [quantumFlux, setQuantumFlux] = useState('99.80');
 
     const waveCanvasRef = useRef(null);
     const particleCanvasRef = useRef(null);
     const radarCanvasRef = useRef(null);
     const matrixCanvasRef = useRef(null);
-    const mousePos = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    const mousePos = useRef({ x: 0, y: 0 });
+    const socketRef = useRef(null);
 
-    // Hyper-Advanced Neural Particle Constellation with Repulsion & Attraction
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            mousePos.current = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+            socketRef.current = io(BACKEND_URL);
+
+            socketRef.current.on('code-update', (incomingCode) => {
+                setCode(incomingCode);
+            });
+
+            return () => {
+                if (socketRef.current) socketRef.current.disconnect();
+            };
+        }
+    }, []);
+
     useEffect(() => {
         const canvas = particleCanvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
         let animId;
 
         let width = (canvas.width = window.innerWidth);
@@ -88,7 +105,6 @@ return executeNeuralSynthesis(8000000);`);
                     ctx.lineTo(mousePos.current.x, mousePos.current.y);
                     ctx.stroke();
 
-                    // Slight magnetic pull toward cursor
                     p.x += (mousePos.current.x - p.x) * 0.01;
                     p.y += (mousePos.current.y - p.y) * 0.01;
                 }
@@ -120,6 +136,7 @@ return executeNeuralSynthesis(8000000);`);
         render();
 
         const handleResize = () => {
+            if (!canvas) return;
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
         };
@@ -132,7 +149,6 @@ return executeNeuralSynthesis(8000000);`);
         };
     }, []);
 
-    // Live telemetry fluctuations
     useEffect(() => {
         const interval = setInterval(() => {
             setCpuLoad((10 + Math.random() * 25).toFixed(1));
@@ -141,68 +157,11 @@ return executeNeuralSynthesis(8000000);`);
         return () => clearInterval(interval);
     }, []);
 
-    useEffect(() => {
-        socket.on('code-update', (incomingCode) => {
-            setCode(incomingCode);
-        });
-        return () => socket.off('code-update');
-    }, []);
-
-    useEffect(() => {
-        drawWave([60, 110, 80, 150, 100, 180, 130, 200]);
-        drawRadar();
-        drawMatrixRain();
-    }, [activeTab]);
-
-    const handleCodeChange = (e) => {
-        const newCode = e.target.value;
-        setCode(newCode);
-        socket.emit('code-change', newCode);
-    };
-
-    const executeCode = async () => {
-        setMetrics(prev => ({ ...prev, status: 'SYNTHESIZING QUANTUM CORES...' }));
-        appendLog(`[DISPATCH] Pushing execution payload through quantum secure tunnel...`);
-
-        try {
-            const response = await fetch('http://localhost:5000/api/sandbox/execute', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code })
-            });
-            const data = await response.json();
-
-            if (data.success) {
-                setMetrics({
-                    time: data.executionTimeMs + 'ms',
-                    memory: data.memoryUsageMb + ' MB',
-                    status: 'QUANTUM OVERDRIVE // SUCCESS'
-                });
-                appendLog(`[SUCCESS] Execution verified. Latency: ${data.executionTimeMs}ms | Heap Allocated: ${data.memoryUsageMb}MB`);
-                drawWave([70, 130, 90, 170, 120, 200, 150, parseFloat(data.executionTimeMs) * 3.8]);
-            } else {
-                setMetrics(prev => ({ ...prev, status: 'EXCEPTION // CORE PANIC' }));
-                appendLog(`[ERROR] ${data.error}`);
-            }
-        } catch (err) {
-            setMetrics(prev => ({ ...prev, status: 'DAEMON OFFLINE' }));
-            appendLog(`[FATAL] Local neural daemon unreachable. Simulating fallback.`);
-            setMetrics({
-                time: '1.42ms',
-                memory: '24.8 MB',
-                status: 'FALLBACK // SIMULATED 200 OK'
-            });
-        }
-    };
-
-    const appendLog = (msg) => {
-        setTerminalLogs(prev => [...prev, msg]);
-    };
-
     const drawWave = (points) => {
         const canvas = waveCanvasRef.current;
-        if (!canvas) return;
+        if (!canvas || !canvas.parentElement) return;
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
         const width = canvas.parentElement.clientWidth;
         const height = canvas.parentElement.clientHeight;
 
@@ -212,7 +171,6 @@ return executeNeuralSynthesis(8000000);`);
 
         ctx.clearRect(0, 0, width, height);
 
-        // Cyber Grid Lines inside Wave Profiler
         ctx.strokeStyle = 'rgba(0, 242, 254, 0.05)';
         ctx.lineWidth = 1;
         for (let x = 0; x < width; x += 30) {
@@ -252,8 +210,9 @@ return executeNeuralSynthesis(8000000);`);
 
     const drawRadar = () => {
         const canvas = radarCanvasRef.current;
-        if (!canvas) return;
+        if (!canvas || !canvas.parentElement) return;
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
         const width = canvas.width = canvas.parentElement.clientWidth;
         const height = canvas.height = canvas.parentElement.clientHeight;
         const cx = width / 2;
@@ -275,7 +234,6 @@ return executeNeuralSynthesis(8000000);`);
         ctx.moveTo(cx, cy - radius); ctx.lineTo(cx, cy + radius);
         ctx.stroke();
 
-        // Pulsing radar nodes
         ctx.fillStyle = '#ff007f';
         ctx.shadowColor = '#ff007f';
         ctx.shadowBlur = 15;
@@ -293,8 +251,9 @@ return executeNeuralSynthesis(8000000);`);
 
     const drawMatrixRain = () => {
         const canvas = matrixCanvasRef.current;
-        if (!canvas) return;
+        if (!canvas || !canvas.parentElement) return;
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
         const width = canvas.width = canvas.parentElement.clientWidth;
         const height = canvas.height = canvas.parentElement.clientHeight;
 
@@ -315,6 +274,58 @@ return executeNeuralSynthesis(8000000);`);
         }
     };
 
+    useEffect(() => {
+        drawWave([60, 110, 80, 150, 100, 180, 130, 200]);
+        drawRadar();
+        drawMatrixRain();
+    }, [activeTab]);
+
+    const handleCodeChange = (e) => {
+        const newCode = e.target.value;
+        setCode(newCode);
+        if (socketRef.current) {
+            socketRef.current.emit('code-change', newCode);
+        }
+    };
+
+    const executeCode = async () => {
+        setMetrics(prev => ({ ...prev, status: 'SYNTHESIZING QUANTUM CORES...' }));
+        appendLog(`[DISPATCH] Pushing execution payload through quantum secure tunnel...`);
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/sandbox/execute`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                setMetrics({
+                    time: data.executionTimeMs + 'ms',
+                    memory: data.memoryUsageMb + ' MB',
+                    status: 'QUANTUM OVERDRIVE // SUCCESS'
+                });
+                appendLog(`[SUCCESS] Execution verified. Latency: ${data.executionTimeMs}ms | Heap Allocated: ${data.memoryUsageMb}MB`);
+                drawWave([70, 130, 90, 170, 120, 200, 150, parseFloat(data.executionTimeMs) * 3.8]);
+            } else {
+                setMetrics(prev => ({ ...prev, status: 'EXCEPTION // CORE PANIC' }));
+                appendLog(`[ERROR] ${data.error}`);
+            }
+        } catch (err) {
+            setMetrics({
+                time: '1.42ms',
+                memory: '24.8 MB',
+                status: 'FALLBACK // SIMULATED 200 OK'
+            });
+            appendLog(`[FATAL] Local neural daemon unreachable. Simulating fallback.`);
+        }
+    };
+
+    const appendLog = (msg) => {
+        setTerminalLogs(prev => [...prev, msg]);
+    };
+
     const handleCliSubmit = (e) => {
         e.preventDefault();
         if (!cliInput.trim()) return;
@@ -325,17 +336,13 @@ return executeNeuralSynthesis(8000000);`);
 
     return (
         <div className="bg-[#020408] text-cyan-300 min-h-screen flex flex-col font-mono select-none overflow-hidden relative">
-            {/* Interactive Particle Field Background */}
             <canvas ref={particleCanvasRef} className="absolute inset-0 pointer-events-none z-0"></canvas>
 
-            {/* Glowing Holographic Orbs */}
             <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-600/25 rounded-full blur-[180px] pointer-events-none z-0 animate-pulse"></div>
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-pink-600/25 rounded-full blur-[180px] pointer-events-none z-0 animate-pulse"></div>
 
-            {/* Cinematic Cyberpunk Scanlines */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.3)_50%)] bg-[length:100%_4px] pointer-events-none z-40 opacity-30"></div>
 
-            {/* Glassmorphic Top HUD with Real-time Telemetry Badges */}
             <header className="bg-[#050b14]/90 backdrop-blur-3xl sticky top-0 z-50 border-b border-cyan-500/40 px-6 py-4 flex items-center justify-between shadow-[0_0_60px_rgba(0,242,254,0.3)]">
                 <div className="flex items-center space-x-6">
                     <div className="flex items-center space-x-4">
@@ -377,7 +384,6 @@ return executeNeuralSynthesis(8000000);`);
                 </div>
             </header>
 
-            {/* Futuristic Tab Bar */}
             <div className="bg-[#050b14]/75 backdrop-blur-md px-6 py-2.5 border-b border-cyan-500/30 flex items-center space-x-4 z-10 text-xs">
                 <button onClick={() => setActiveTab('editor')} className={`px-5 py-2 rounded-xl font-bold transition flex items-center space-x-2.5 ${activeTab === 'editor' ? 'bg-gradient-to-r from-cyan-500/30 to-pink-500/30 text-cyan-200 border border-cyan-500/60 shadow-[0_0_25px_rgba(0,242,254,0.4)]' : 'text-slate-400 hover:text-cyan-300'}`}>
                     <i className="fa-solid fa-code text-cyan-400 text-sm"></i>
@@ -397,7 +403,6 @@ return executeNeuralSynthesis(8000000);`);
                 </button>
             </div>
 
-            {/* Immersive Bento Grid Workspace Layout */}
             <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 p-5 max-w-[1920px] w-full mx-auto z-10">
                 <section className="lg:col-span-8 flex flex-col bg-[#050b14]/90 backdrop-blur-3xl rounded-3xl overflow-hidden border border-cyan-500/40 shadow-[0_0_70px_rgba(0,0,0,0.95)] relative group">
                     <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent animate-pulse"></div>
@@ -468,7 +473,6 @@ return executeNeuralSynthesis(8000000);`);
                     )}
                 </section>
 
-                {/* Right Side Glassmorphic Telemetry & Profiler */}
                 <section className="lg:col-span-4 flex flex-col space-y-5">
                     <div className="bg-[#050b14]/90 backdrop-blur-3xl rounded-3xl p-5 border border-cyan-500/40 shadow-[0_0_70px_rgba(0,0,0,0.95)] flex flex-col">
                         <div className="flex items-center justify-between mb-4">
@@ -514,7 +518,6 @@ return executeNeuralSynthesis(8000000);`);
                 </section>
             </main>
 
-            {/* Cinematic Branch Manager Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 bg-[#020408]/90 backdrop-blur-3xl flex items-center justify-center p-4">
                     <div className="bg-[#050b14] w-full max-w-md rounded-3xl border border-cyan-500/60 p-7 shadow-[0_0_90px_rgba(255,0,127,0.5)]">
